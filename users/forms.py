@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
-    email =- forms.EmailField()
+    email = forms.EmailField()
     usable_password = None
     
     def __init__(self, *args, **kwargs):
