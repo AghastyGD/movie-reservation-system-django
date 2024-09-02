@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Reserve a Seat{% endblock %}
+
+{% block content %}
+    <h1>Reserve a Seat for {{ showtime.movie.title }}</h1>
+    <p>Showtime: {{ showtime.formatted_start_time }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="seat">Choose a Seat:</label>
+        <select name="seat" id="seat">
+            {% for seat in seats %}
+                {% if seat.is_available %}
+                    <option value="{{ seat.id }}">{{ seat.seat_number }}</option>
+                {% else %}
+                    <option value="{{ seat.id }}" disabled>{{ seat.seat_number }} (Unavailable)</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Reserve</button>
+    </form>
+{% endblock %}
