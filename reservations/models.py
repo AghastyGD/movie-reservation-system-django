@@ -4,6 +4,7 @@ from django.forms import ValidationError
 from .utils.datetime_utils import format_datetime
 
 class Genre(models.Model):
+    tmdb_id = models.IntegerField(unique=True)
     name = models.CharField(max_length=100)
     
     def __str__(self):
@@ -12,7 +13,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
-    poster_image = models.ImageField(upload_to="movie_poster/")
+    poster_image = models.URLField()
     genre = models.ManyToManyField(Genre)
     
     def __str__(self):
