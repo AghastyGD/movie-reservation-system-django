@@ -22,7 +22,7 @@ class Showtime(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    num_seats = models.PositiveIntegerField(default=100) 
+    num_seats = models.PositiveIntegerField(default=50) 
 
     def __str__(self):
         return f"{self.movie.title} - {self.formatted_start_time}"
@@ -43,7 +43,7 @@ class Showtime(models.Model):
 
     def create_seats(self):
         for i in range(1, self.num_seats + 1):
-            Seat.objects.create(showtime=self, seat_number=f"Seat {i}")
+            Seat.objects.create(showtime=self, seat_number=i)
     
 class Seat(models.Model):
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
