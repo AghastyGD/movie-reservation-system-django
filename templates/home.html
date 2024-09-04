@@ -5,17 +5,23 @@
 {% block content %}
     <div class="welcome-section">
         {% if user.is_authenticated %}
-            <h2>Welcome, {{ user.username|capfirst }}!</h2>
+            <h2>Welcome back, {{ user.username|capfirst }}!</h2>
+            <p>Ready to watch some movies? Check out our latest selections below.</p>
         {% else %}
-            <h2>Welcome to our Movie Reservation System</h2>
-            <div class="auth-buttons">
-                <a href="{% url 'login' %}" class="button">Log In</a>
-                <a href="{% url 'signup' %}" class="button">Sign Up</a>
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h2>Welcome to our Movie Reservation System</h2>
+                    <p>Discover and book your favorite movies with ease. Join us to get started!</p>
+                </div>
+                <div class="auth-buttons">
+                    <a href="{% url 'login' %}" class="button button-primary">Log In</a>
+                    <a href="{% url 'signup' %}" class="button button-secondary">Sign Up</a>
+                </div>
             </div>
         {% endif %}
     </div>
 
-    <h1>Feel free to check our availabe movies and reserve seats</h1>
+    <h1>Featured Movies</h1>
     <div class="movie-list">
         {% for movie in movies %}
             <div class="movie-item">

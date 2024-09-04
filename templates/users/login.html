@@ -3,17 +3,33 @@
 {% block title %} Log In {% endblock %}
 
 {% block content %}
-{% for message in messages %}
-{% if message %}
-    {{ message.tags }}
-    {{ message }}
-{% endif %}
-{% endfor %}
-<h2> Log In </h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
-</form>
+<div class="auth-container">
+    <h2> Log In </h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error-message">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="auth-button">Log In</button>
+    </form>
+    <p class="auth-link">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+</div>
 {% endblock %}
 

@@ -10,6 +10,7 @@
             <p>{{ movie.description }}</p>
             
             <h2>Showtimes</h2>
+            {% if showtimes %}
             <ul>
                 {% for showtime in showtimes %}
                     <li>
@@ -22,6 +23,9 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% else %}
+                <p>Currently, there is no showtimes available for this movie :(</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
