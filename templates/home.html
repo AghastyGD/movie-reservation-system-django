@@ -3,17 +3,30 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
+    <div class="welcome-section">
+        {% if user.is_authenticated %}
+            <h2>Welcome, {{ user.username|capfirst }}!</h2>
+        {% else %}
+            <h2>Welcome to our Movie Reservation System</h2>
+            <div class="auth-buttons">
+                <a href="{% url 'login' %}" class="button">Log In</a>
+                <a href="{% url 'signup' %}" class="button">Sign Up</a>
+            </div>
+        {% endif %}
+    </div>
 
-{% if user.is_authenticated %}
-    Hi {{ user.username | capfirst }} welcome to our Movie Reservation System.
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Log Out</button>
-    </form>
-
-{% else %}
-    <p> You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a> | 
-    <a href="{% url 'signup'%}">Sign Up</a>
-{% endif %}
+    <h1>Movies</h1>
+    <div class="movie-list">
+        {% for movie in movies %}
+            <div class="movie-item">
+                <a href="{% url 'movie_detail' movie.id %}">
+                    <img src="{{ movie.poster_image }}" alt="{{ movie.title }}">
+                    <div class="movie-item-content">
+                        <h3>{{ movie.title }}</h3>
+                        <p>{{ movie.description|truncatewords:15 }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

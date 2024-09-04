@@ -1,23 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Reserve a Seat{% endblock %}
+{% block title %}Reserve Seats{% endblock %}
 
 {% block content %}
-    <h1>Reserve a Seat for {{ showtime.movie.title }}</h1>
-    <p>Showtime: {{ showtime.formatted_start_time }}</p>
+<div class="reservation-form-container">
+    <h1>Reserve Seats</h1>
+    <div class="movie-info">
+        <h2>{{ showtime.movie.title }}</h2>
+        <p>Showtime: {{ showtime.formatted_start_time }}</p>
+    </div>
 
-    <form method="post">
+    <form method="post" class="reservation-form">
         {% csrf_token %}
-        <label for="seat">Choose a Seat:</label>
-        <select name="seat" id="seat">
-            {% for seat in seats %}
-                {% if seat.is_available %}
-                    <option value="{{ seat.id }}">{{ seat.seat_number }}</option>
-                {% else %}
-                    <option value="{{ seat.id }}" disabled>{{ seat.seat_number }} (Unavailable)</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <button type="submit">Reserve</button>
+        <div class="form-group">
+            <label>Choose Seats:</label>
+            <div class="seat-map">
+                {% for seat in seats %}
+                    <div class="seat {% if not seat.is_available %}unavailable{% endif %}">
+                        <input type="checkbox" name="seats" id="seat-{{ seat.id }}" value="{{ seat.id }}" {% if not seat.is_available %}disabled{% endif %}>
+                        <label for="seat-{{ seat.id }}">{{ seat.seat_number }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit" class="reserve-button">Reserve Seats</button>
     </form>
+</div>
 {% endblock %}

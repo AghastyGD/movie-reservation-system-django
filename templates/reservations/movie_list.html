@@ -4,12 +4,17 @@
 
 {% block content %}
     <h1>Movies</h1>
-    <ul>
+    <div class="movie-list">
         {% for movie in movies %}
-            <li>
-                <a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a>
-                <p>{{ movie.description }}</p>
-            </li>
+            <div class="movie-item">
+                <a href="{% url 'movie_detail' movie.id %}">
+                    <img src="{{ movie.poster_image }}" alt="{{ movie.title }}">
+                    <div class="movie-item-content">
+                        <h3>{{ movie.title }}</h3>
+                        <p>{{ movie.description|truncatewords:15 }}</p>
+                    </div>
+                </a>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
