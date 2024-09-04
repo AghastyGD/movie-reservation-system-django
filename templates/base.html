@@ -18,12 +18,15 @@
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'movie_list' %}">Movies</a></li>
                     {% if user.is_authenticated %}
+                        <li><a href="{% url 'user_reservations' %}">My Reservations</a></li>
                         <li>
+                           
                             <form method="post" action="{% url 'logout' %}" class="logout-form">
                                 {% csrf_token %}
                                 <button type="submit" class="nav-link">Log Out</button>
                             </form>
                         </li>
+                        
                     {% else %}
                         <li><a href="{% url 'login' %}">Log In</a></li>
                         <li><a href="{% url 'signup' %}">Sign Up</a></li>

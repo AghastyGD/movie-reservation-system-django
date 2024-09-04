@@ -56,3 +56,11 @@ def reservation_form(request, showtime_id):
         return redirect('movie_list')
     
     return render(request, 'reservations/reservation_form.html', context)
+
+@login_required
+def user_reservations(request):
+    reservations = Reservation.objects.filter(user=request.user).order_by('-reservation_time')
+    context = {
+        'reservations': reservations
+    }
+    return render(request, 'reservations/user_reservations.html', context)

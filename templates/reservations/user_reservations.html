@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}My Reservations{% endblock %}
+
+{% block content %}
+<div class="user-reservations-container">
+    <h1>My Reservations</h1>
+    {% if reservations %}
+        <div class="reservation-list">
+            {% for reservation in reservations %}
+                <div class="reservation-item">
+                    <img src="{{ reservation.seat.showtime.movie.poster_image }}" alt="{{ reservation.seat.showtime.movie.title }}" class="movie-poster">
+                    <div class="reservation-details">
+                        <h2>{{ reservation.seat.showtime.movie.title }}</h2>
+                        <p>Date: {{ reservation.seat.showtime.formatted_start_time }}</p>
+                        <p>Seat: {{ reservation.seat.seat_number }}</p>
+                        <p>Reserved on: {{ reservation.formatted_reservation_time }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You don't have any reservations yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
