@@ -1,40 +1,58 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from .models import Movie, Showtime, Seat, Reservation
 
-def movie_list(request):
-    movies = Movie.objects.all()
-    
+def home(request):
     context = {
-        'movies': movies
+        'movies': Movie.objects.all()
+    }
+    return render(request, 'home.html', context)
+
+def movie_list(request):
+    context = {
+        'movies': Movie.objects.all()
     }
     return render(request, "reservations/movie_list.html", context)
 
-
 def movie_detail(request, pk):
     movie = get_object_or_404(Movie, pk=pk)
-    showtimes = Showtime.objects.filter(movie=movie)
-    
     context = {
         'movie': movie,
-        'showtimes': showtimes
+        'showtimes': Showtime.objects.filter(movie=movie)
     }
     return render(request, 'reservations/movie_detail.html', context)
 
-
+@login_required
 def reservation_form(request, showtime_id):
     showtime = get_object_or_404(Showtime, pk=showtime_id)
-    seats = Seat.objects.filter(showtime=showtime, is_available=True)
-    
-    if request.method == 'POST':
-        seat_id = request.POST.get('seat')
-        seat = get_object_or_404(Seat, pk=seat_id)
-        reservation = Reservation(user=request.user, seat=seat)
-        reservation.save()
-        return redirect('movie_list')
-    
+    seats = Seat.objects.filter(showtime=showtime)
     context = {
         'showtime': showtime,
         'seats': seats
     }
+    
+    if request.method == 'POST':
+        seat_ids = request.POST.getlist('seats')
+        if not seat_ids:
+            messages.error(request, "Please select at least one seat.")
+            return render(request, 'reservations/reservation_form.html', context)
+        
+        unavailable_seats = []
+        for seat_id in seat_ids:
+            seat = get_object_or_404(Seat, pk=seat_id)
+            if not seat.is_available:
+                unavailable_seats.append(seat.seat_number)
+        
+        if unavailable_seats:
+            messages.error(request, f"Seats {', '.join(unavailable_seats)} are no longer available.")
+            return render(request, 'reservations/reservation_form.html', context)
+        
+        for seat_id in seat_ids:
+            seat = get_object_or_404(Seat, pk=seat_id)
+            Reservation.objects.create(user=request.user, seat=seat)
+        
+        messages.success(request, "Seats reserved successfully!")
+        return redirect('movie_list')
     
     return render(request, 'reservations/reservation_form.html', context)
