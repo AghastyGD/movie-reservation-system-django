@@ -5,13 +5,6 @@
 {% block content %}
 <div class="auth-container">
     <h2> Sign Up </h2>
-    {% if messages %}
-        {% for message in messages %}
-            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
     <form method="post" class="auth-form">
         {% csrf_token %}
         {% for field in form %}
