@@ -15,6 +15,12 @@
                         <p>Date: {{ reservation.seat.showtime.formatted_start_time }}</p>
                         <p>Seat: {{ reservation.seat.seat_number }}</p>
                         <p>Reserved on: {{ reservation.formatted_reservation_time }}</p>
+                        {% if reservation.is_upcoming %}
+                            <form method="post" action="{% url 'cancel_reservation' reservation.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel-button">Cancel Reservation</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

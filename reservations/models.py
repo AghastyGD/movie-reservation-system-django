@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.forms import ValidationError
 from .utils.datetime_utils import format_datetime
+from django.utils import timezone
 
 class Genre(models.Model):
     tmdb_id = models.IntegerField(unique=True)
@@ -66,11 +67,21 @@ class Reservation(models.Model):
     def formatted_reservation_time(self):
         return format_datetime(self.reservation_time)
     
+    @property
+    def is_upcoming(self):
+        return self.seat.showtime.start_time > timezone.now()
+    
     def save(self, *args, **kwargs):
-        if not self.seat.is_available:
-            raise ValidationError("This seat is already reserved.")
-        self.seat.is_available = False
-        self.seat.save()
+        if not self.pk:
+            if not self.seat.is_available:
+                raise ValidationError("This seat is already reserved.")
+            self.seat.is_available = False
+            self.seat.save()
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.seat.is_available = True
+        self.seat.save()
+        super().delete(*args, **kwargs)
 
 

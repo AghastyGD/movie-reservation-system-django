@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.urls import reverse
 from .models import Movie, Showtime, Seat, Reservation
 
 def home(request):
@@ -64,3 +65,12 @@ def user_reservations(request):
         'reservations': reservations
     }
     return render(request, 'reservations/user_reservations.html', context)
+
+def cancel_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    if request.user == reservation.user and reservation.is_upcoming:
+        reservation.delete()
+        messages.success(request, "Your reservation has been successfully cancelled.")
+    else:
+        messages.error(request, "Unable to cancel the reservation.")
+    return redirect(reverse('user_reservations'))
