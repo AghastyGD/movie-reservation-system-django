@@ -7,6 +7,7 @@ body {
     padding: 0;
 }
 
+
 .container {
     width: 90%;
     max-width: 1200px;
@@ -74,7 +75,6 @@ nav a:hover, .nav-link:hover {
     cursor: pointer;
     color: inherit; 
 }
-
 .movie-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -603,3 +603,4 @@ button:hover {
     font-size: 14px;
     margin-top: 5px;
 }
+
